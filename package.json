@@ -1,0 +1,25 @@
+{
+  "name": "Shopping-Website",
+  "version": "1.0.0",
+  "description": "This is a proposal for a shopping website created by a group of engineering students at the German University in Cairo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AyaFayed/Shopping-Website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AyaFayed/Shopping-Website/issues"
+  },
+  "homepage": "https://github.com/AyaFayed/Shopping-Website#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13"
+  }
+}
