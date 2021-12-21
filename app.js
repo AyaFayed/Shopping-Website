@@ -1,17 +1,36 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
 
+const product = require("./models/product");
+const user = require("./models/user");
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+//mongodb
+mongoose
+  .connect("mongodb://localhost:27017/shoppingWebsiteDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("MONGO CONNECTION ESTABLISHED!");
+  })
+  .catch((error) => handleError(error));
+mongoose.connection.on("error", (err) => {
+  console.log("MONGO CONNECTION ERROR!");
+  logError(err);
+});
 
 //to load images
 app.use(express.static("public"));
 // parse application/json
 app.use(bodyParser.json());
+
 //for post requests
-//search
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse the raw data
@@ -23,10 +42,22 @@ app.listen(3000, () => {
   console.log("Serving on port 3000");
 });
 
-//ROUTES:
+//===============
+// PUBLIC ROUTES
+//===============
+
+//login
+app.get("/", (req, res) => {
+  res.render("login");
+});
+
+//registration
+app.get("/registration", (req, res) => {
+  res.render("registration");
+});
 
 //home route
-app.get("/", (req, res) => {
+app.get("/home", (req, res) => {
   res.render("home");
 });
 
@@ -81,23 +112,8 @@ app.get("/iphone", (req, res) => {
 });
 
 //search
-app.post("/search", (req, res) => {
+app.post("/search", async (req, res) => {
   const { Search } = req.body;
-  const s2 = Search.toLowerCase();
-  const itemSearchedFor = s2.replace(/\s+/g, "");
-  if (
-    itemSearchedFor === "books" ||
-    itemSearchedFor === "boxing" ||
-    itemSearchedFor === "galaxy" ||
-    itemSearchedFor === "iphone" ||
-    itemSearchedFor === "leaves" ||
-    itemSearchedFor === "phones" ||
-    itemSearchedFor === "sports" ||
-    itemSearchedFor === "sun" ||
-    itemSearchedFor === "tennis"
-  ) {
-    res.render(`${itemSearchedFor}`);
-  } else {
-    res.render("searchresults");
-  }
+  const results = await product.find({ $text: { $search: `${Search}` } });
+  res.render("searchresults", { results });
 });
