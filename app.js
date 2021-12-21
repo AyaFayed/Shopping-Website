@@ -51,9 +51,31 @@ app.get("/", (req, res) => {
   res.render("login");
 });
 
+app.post("/", async (req, res) => {
+  const { username, password } = req.body;
+  const currUser = await user.findOne({ username: `${username}` });
+  if (password === currUser.password) {
+    console.log("yaay!");
+    res.render("home");
+  } else {
+    console.log("No!");
+  }
+});
+
 //registration
 app.get("/registration", (req, res) => {
   res.render("registration");
+});
+
+//registration of a new user
+app.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+  const newUser = new user({
+    username: `${username}`,
+    password: `${password}`,
+  });
+  await newUser.save();
+  res.redirect("home");
 });
 
 //home route
