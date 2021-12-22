@@ -9,6 +9,8 @@ const user = require("./models/user");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const Joi = require("joi");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -24,18 +26,12 @@ app.use(bodyParser.text());
 //========================
 
 app.use(
-  require("express-session")({
+  session({
     secret: "Secter whatev",
     resave: true,
     saveUninitialized: true,
   })
 );
-
-app.use((req, res, next) => {
-  res.locals.currentUser = req.session.user;
-  res.locals.lang = req.session.lang;
-  next();
-});
 
 mongoose
   .connect("mongodb://localhost:27017/shoppingWebsiteDB", {
@@ -60,19 +56,15 @@ app.use((req, res, next) => {
   next();
 });
 
-//=================
-// Error validation
-//=================
-/*
-const validateRegistration = (req, res, next) => {
-  const { error } = userSchema.validate(req.body);
-  if (error) {
-    var msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
+//===============
+// Logged in user
+//===============
+const requireLogin = (req, res, next) => {
+  if (!req.session.user_id) {
+    return res.redirect("/");
   }
-};*/
+  next();
+};
 
 app.listen(3000, () => {
   console.log("Serving on port 3000");
@@ -91,12 +83,13 @@ app.post(
   "/",
   catchAsync(async (req, res) => {
     const { username, password } = req.body;
-    const currUser = await user.findOne({ username: `${username}` });
-    if (currUser && password === currUser.password) {
-      console.log("yaay!");
-      res.render("home");
+    const currUser = await user.findOne({ username });
+    const valid = await bcrypt.compare(password, currUser.password);
+    if (valid) {
+      req.session.user_id = currUser._id;
+      res.redirect("/home");
     } else {
-      console.log("No!");
+      res.redirect("/");
     }
   })
 );
@@ -111,90 +104,86 @@ app.post(
   "/register",
   catchAsync(async (req, res) => {
     const userSchema = Joi.object({
-      user: Joi.object({
-        username: Joi.string().min(3).max(50).required(),
-        password: Joi.string().min(6).max(50).required(),
-        cart: Joi.any().optional(),
-      }).required(),
+      username: Joi.string().min(3).max(50).required(),
+      password: Joi.string().min(6).max(50).required(),
+      cart: Joi.any().optional(),
     });
     const { error } = userSchema.validate(req.body);
     if (error) {
       const msg = error.details.map((el) => el.message).join(",");
-      req.flash("error", msg);
+      res.redirect("/registration");
     } else {
       const { username, password } = req.body;
-      const otherUser = await user.findOne({ username: `${username}` });
+      const otherUser = await user.findOne({ username });
       if (otherUser) {
         const msg = "This username already exists!";
-        req.flash("error", msg);
+        res.redirect("/registration");
       } else {
+        const pass = await bcrypt.hash(password, 12);
         const newUser = new user({
           username: `${username}`,
-          password: `${password}`,
+          password: `${pass}`,
         });
-
         await newUser.save();
-        var msgs = [];
-        msgs.push("You registered successfully !");
-        req.flash("success", msgs);
-        res.redirect("home");
+        req.session.user_id = newUser._id;
+        res.redirect("/home");
       }
     }
   })
 );
 
 //home route
-app.get("/home", (req, res) => {
+app.get("/home", requireLogin, (req, res) => {
   res.render("home");
 });
 
 //books route
-app.get("/books", (req, res) => {
+app.get("/books", requireLogin, (req, res) => {
   res.render("books");
 });
 
 //phones route
-app.get("/phones", (req, res) => {
+app.get("/phones", requireLogin, (req, res) => {
   res.render("phones");
 });
 
 //sports route
-app.get("/sports", (req, res) => {
+app.get("/sports", requireLogin, (req, res) => {
   res.render("sports");
 });
 
 //cart route
-app.get("/cart", (req, res) => {
+app.get("/cart", requireLogin, (req, res) => {
   res.render("cart");
 });
 
 //boxing sport route
-app.get("/boxing", (req, res) => {
+app.get("/boxing", requireLogin, (req, res) => {
   res.render("boxing");
 });
 
 //tennis sport route
-app.get("/tennis", (req, res) => {
+app.get("/tennis", requireLogin, (req, res) => {
   res.render("tennis");
 });
 
 //leaves book route
-app.get("/leaves", (req, res) => {
+app.get("/leaves", requireLogin, (req, res) => {
   res.render("leaves");
 });
 
 //sun book route
-app.get("/sun", (req, res) => {
+app.get("/sun", requireLogin, (req, res) => {
   res.render("sun");
 });
 
 //galaxy phone route
-app.get("/galaxy", (req, res) => {
+app.get("/galaxy", requireLogin, (req, res) => {
   res.render("galaxy");
 });
 
 //iphone phone route
-app.get("/iphone", (req, res) => {
+app.get("/iphone", requireLogin, (req, res) => {
   res.render("iphone");
 });
 
@@ -203,7 +192,15 @@ app.post(
   "/search",
   catchAsync(async (req, res) => {
     const { Search } = req.body;
-    const results = await product.find({ $text: { $search: `${Search}` } });
+    const all = await product.find({});
+    var results = [];
+    if (Search.length != 0) {
+      for (let one of all) {
+        if (one.name.toLowerCase().includes(Search.toLowerCase())) {
+          results.push(one);
+        }
+      }
+    }
     res.render("searchresults", { results });
   })
 );
