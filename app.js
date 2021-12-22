@@ -45,7 +45,7 @@ app.listen(3000, () => {
 //===============
 // PUBLIC ROUTES
 //===============
-
+// another public routes
 //login
 app.get("/", (req, res) => {
   res.render("login");
