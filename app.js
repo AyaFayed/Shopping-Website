@@ -132,7 +132,7 @@ app.get("/galaxy", (req, res) => {
 app.get("/iphone", (req, res) => {
   res.render("iphone");
 });
-
+// dsbajdkgasdjkhasvd kasgd yi
 //search
 app.post("/search", async (req, res) => {
   const { Search } = req.body;
