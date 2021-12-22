@@ -21,6 +21,7 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
+  ref: String,
 });
 
 productSchema.index({ title: "text", description: "text", category: "text" });

@@ -34,6 +34,7 @@ const seedDB = async () => {
     const u = new user({
       username: `${users[i].username}`,
       password: `${users[i].password}`,
+      cart: [],
     });
 
     await u.save();
