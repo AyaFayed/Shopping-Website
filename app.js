@@ -3,14 +3,38 @@ const mongoose = require("mongoose");
 const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
-
+const flash = require("connect-flash");
 const product = require("./models/product");
 const user = require("./models/user");
+const catchAsync = require("./utils/catchAsync");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(flash());
+app.use(express.static("public"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.raw());
+app.use(bodyParser.text());
 
-//mongodb
+//========================
+// SESSION & MONGO CONFIG
+//========================
+
+app.use(
+  require("express-session")({
+    secret: "Secter whatev",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session.user;
+  res.locals.lang = req.session.lang;
+  next();
+});
+
 mongoose
   .connect("mongodb://localhost:27017/shoppingWebsiteDB", {
     useNewUrlParser: true,
@@ -25,18 +49,31 @@ mongoose.connection.on("error", (err) => {
   logError(err);
 });
 
-//to load images
-app.use(express.static("public"));
-// parse application/json
-app.use(bodyParser.json());
+//===============
+// FLASH
+//===============
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
+});
 
-//for post requests
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// parse the raw data
-app.use(bodyParser.raw());
-// parse text
-app.use(bodyParser.text());
+//=================
+// Error validation
+//=================
+/*const ExpressError = require("./utils/ExpressError");
+const catchAsync = require("./utils/catchAsync");
+const { userSchema } = require("./Schemas.js");
+const Joi = require("joi");
+const validateRegistration = (req, res, next) => {
+  const { error } = userSchema.validate(req.body);
+  if (error) {
+    var msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+};*/
 
 app.listen(3000, () => {
   console.log("Serving on port 3000");
@@ -68,15 +105,21 @@ app.get("/registration", (req, res) => {
 });
 
 //registration of a new user
-app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
-  const newUser = new user({
-    username: `${username}`,
-    password: `${password}`,
-  });
-  await newUser.save();
-  res.redirect("home");
-});
+app.post(
+  "/register",
+  catchAsync(async (req, res) => {
+    const { username, password } = req.body;
+    const newUser = new user({
+      username: `${username}`,
+      password: `${password}`,
+    });
+    await newUser.save();
+    /* var msgs = [];
+    msgs.push("You registered successfully !");
+    req.flash("success", msgs);
+    res.redirect("home");*/
+  })
+);
 
 //home route
 app.get("/home", (req, res) => {
@@ -134,8 +177,11 @@ app.get("/iphone", (req, res) => {
 });
 
 //search
-app.post("/search", async (req, res) => {
-  const { Search } = req.body;
-  const results = await product.find({ $text: { $search: `${Search}` } });
-  res.render("searchresults", { results });
-});
+app.post(
+  "/search",
+  catchAsync(async (req, res) => {
+    const { Search } = req.body;
+    const results = await product.find({ $text: { $search: `${Search}` } });
+    res.render("searchresults", { results });
+  })
+);
