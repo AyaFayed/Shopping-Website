@@ -143,6 +143,8 @@ app.post(
   })
 );
 
+// hoba eh hoba ah
+
 //home route
 app.get("/home", (req, res) => {
   res.render("home");
