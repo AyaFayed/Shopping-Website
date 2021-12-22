@@ -7,6 +7,8 @@ const flash = require("connect-flash");
 const product = require("./models/product");
 const user = require("./models/user");
 const catchAsync = require("./utils/catchAsync");
+const ExpressError = require("./utils/ExpressError");
+const Joi = require("joi");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -61,10 +63,7 @@ app.use((req, res, next) => {
 //=================
 // Error validation
 //=================
-/*const ExpressError = require("./utils/ExpressError");
-const catchAsync = require("./utils/catchAsync");
-const { userSchema } = require("./Schemas.js");
-const Joi = require("joi");
+/*
 const validateRegistration = (req, res, next) => {
   const { error } = userSchema.validate(req.body);
   if (error) {
@@ -88,16 +87,19 @@ app.get("/", (req, res) => {
   res.render("login");
 });
 
-app.post("/", async (req, res) => {
-  const { username, password } = req.body;
-  const currUser = await user.findOne({ username: `${username}` });
-  if (password === currUser.password) {
-    console.log("yaay!");
-    res.render("home");
-  } else {
-    console.log("No!");
-  }
-});
+app.post(
+  "/",
+  catchAsync(async (req, res) => {
+    const { username, password } = req.body;
+    const currUser = await user.findOne({ username: `${username}` });
+    if (currUser && password === currUser.password) {
+      console.log("yaay!");
+      res.render("home");
+    } else {
+      console.log("No!");
+    }
+  })
+);
 
 //registration
 app.get("/registration", (req, res) => {
@@ -108,16 +110,36 @@ app.get("/registration", (req, res) => {
 app.post(
   "/register",
   catchAsync(async (req, res) => {
-    const { username, password } = req.body;
-    const newUser = new user({
-      username: `${username}`,
-      password: `${password}`,
+    const userSchema = Joi.object({
+      user: Joi.object({
+        username: Joi.string().min(3).max(50).required(),
+        password: Joi.string().min(6).max(50).required(),
+        cart: Joi.any().optional(),
+      }).required(),
     });
-    await newUser.save();
-    /* var msgs = [];
-    msgs.push("You registered successfully !");
-    req.flash("success", msgs);
-    res.redirect("home");*/
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+      const msg = error.details.map((el) => el.message).join(",");
+      req.flash("error", msg);
+    } else {
+      const { username, password } = req.body;
+      const otherUser = await user.findOne({ username: `${username}` });
+      if (otherUser) {
+        const msg = "This username already exists!";
+        req.flash("error", msg);
+      } else {
+        const newUser = new user({
+          username: `${username}`,
+          password: `${password}`,
+        });
+
+        await newUser.save();
+        var msgs = [];
+        msgs.push("You registered successfully !");
+        req.flash("success", msgs);
+        res.redirect("home");
+      }
+    }
   })
 );
 
