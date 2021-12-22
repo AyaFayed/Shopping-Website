@@ -87,19 +87,22 @@ app.get("/", (req, res) => {
   res.render("login");
 });
 
+var currUser = {};
 app.post(
   "/",
   catchAsync(async (req, res) => {
     const { username, password } = req.body;
-    const currUser = await user.findOne({ username: `${username}` });
+    currUser = await user.findOne({ username: `${username}` });
     if (currUser && password === currUser.password) {
-      console.log("yaay!");
+      console.log(currUser);
       res.render("home");
     } else {
       console.log("No!");
     }
   })
 );
+
+
 
 //registration
 app.get("/registration", (req, res) => {
@@ -199,7 +202,7 @@ app.get("/galaxy", (req, res) => {
 app.get("/iphone", (req, res) => {
   res.render("iphone");
 });
-// dsbajdkgasdjkhasvd kasgd yi
+
 //search
 app.post(
   "/search",
@@ -208,4 +211,11 @@ app.post(
     const results = await product.find({ $text: { $search: `${Search}` } });
     res.render("searchresults", { results });
   })
+);
+
+
+// add to cart
+app.post("/galaxy",function(req,res){
+  console.log("no!");
+  }
 );

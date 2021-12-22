@@ -3,6 +3,7 @@ const products = require("./products");
 const product = require("../models/product");
 const users = require("./users");
 const user = require("../models/user");
+const { append } = require("express/lib/response");
 
 mongoose.connect("mongodb://localhost:27017/shoppingWebsiteDB", {
   useNewUrlParser: true,
@@ -39,7 +40,11 @@ const seedDB = async () => {
 
     await u.save();
   }
+  
 };
+
+
+
 
 seedDB().then(() => {
   mongoose.connection.close();
