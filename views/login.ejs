@@ -14,7 +14,7 @@
       }
       .cont {
         position: relative;
-        left: 600px;
+        left: 575px;
         top: 50px;
         color: white;
       }
@@ -36,17 +36,51 @@
       <h1>Welcome</h1>
     </div>
     <div class="cont">
-      <form method="POST">
+      <form method="POST" class="needs-validation" novalidate>
         Username:<br />
-        <input type="text" name="username" />
-        <br />
+        <div class="col-2 m-0 p-0">
+          <input type="text" name="username" class="form-control" required />
+          <br />
+        </div>
         Password:<br />
-        <input type="password" name="password" />
-        <br /><br />
+        <div class="col-2 m-0 p-0">
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            required
+          />
+        </div>
+        <br />
         <input type="submit" value="Login" />
       </form>
       <br />
       <a href="registration">I dont have an account</a>
     </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll(".needs-validation");
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach(function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
   </body>
 </html>
