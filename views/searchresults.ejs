@@ -16,6 +16,7 @@
       .card-horizontal {
         display: flex;
         flex: 1 1 auto;
+        color: aliceblue;
       }
     </style>
     <meta charset="UTF-8" />
@@ -64,15 +65,19 @@
     <% if (results.length==0) { %>
     <div>item not found</div>
     <% }%> <% for (let result of results) { %>
-    <a class="card" href="<%=`${result.ref}`%>">
+    <a
+      class="card-light"
+      href="<%=`${result.ref}`%>"
+      style="text-decoration: none"
+    >
       <div class="card-horizontal">
         <div class="img-square-wrapper">
-          <img class="" src="<%= result.image %>" width="200" height="250" />
+          <img class="" src="<%= result.image %>" width="160" height="200" />
         </div>
         <div class="card-body">
           <h4 class="card-title"><%= result.name %></h4>
           <h6 class="card-subtitle mb-2 text-muted"><%= result.category %></h6>
-          <p class="card-text"><%= result.description %></p>
+          <h6 class="card-subtitle mb-3 mt-2">Price : <%= result.price %> $</h6>
         </div>
       </div>
     </a>

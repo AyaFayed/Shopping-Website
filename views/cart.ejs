@@ -63,26 +63,31 @@
       <% if (userCart.length==0) { %>
       <div style="color: aliceblue">Nothing</div>
       <% }%> <% for (let prod of userCart) { %>
-      <div class="card">
+      <div class="card-light" style="color: aliceblue">
         <div class="card-horizontal">
           <div class="img-square-wrapper">
-            <img class="" src="<%=prod.image %>" width="200" height="250" />
+            <img class="" src="<%=prod.image %>" width="160" height="200" />
           </div>
           <div class="card-body">
             <h4 class="card-title"><%= prod.name %></h4>
             <h6 class="card-subtitle mb-2 text-muted"><%= prod.category %></h6>
-            <h6 class="card-subtitle mb-2 mt-2">Quantity : <%= prod.qty %></h6>
-            <p class="card-text"><%= prod.description %></p>
-            <a class="btn btn-info" href="<%= `${prod.ref}` %>"> view item</a>
+            <h6 class="card-subtitle mt-2">Quantity : <%= prod.qty %></h6>
+            <h6 class="card-subtitle mb-1 mt-2">Price : <%= prod.price %> $</h6>
+
+            <a class="btn btn-info mt-2" href="<%= `${prod.ref}` %>">
+              view item</a
+            >
           </div>
         </div>
       </div>
       <% } %>
     </div>
-    <form method="POST" action="/cart">
-      <button type="submit" class="btn btn-outline-success my-2 my-sm-0">
-        Delete Cart
-      </button>
-    </form>
+    <div class="mt-4">
+      <form method="POST" action="/cart">
+        <button type="submit" class="btn btn-outline-light my-2 my-sm-0 mt-4">
+          Delete Cart
+        </button>
+      </form>
+    </div>
   </body>
 </html>
