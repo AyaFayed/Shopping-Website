@@ -69,6 +69,30 @@ const requireLogin = (req, res, next) => {
   next();
 };
 
+//===============
+// Add to Cart
+//===============
+async function clicker(name, cart) {
+  const prod = await product.findOne({ name });
+  const exists = false;
+  for (let one of cart) {
+    if (one.name == name) {
+      exists = true;
+      one.qty = one.qty + 1;
+    }
+  }
+  if (!exists) {
+    cart.push({
+      image: prod.image,
+      name: prod.name,
+      category: prod.category,
+      description: prod.description,
+      price: prod.price,
+      qty: 1,
+    });
+  }
+}
+
 app.listen(3000, () => {
   console.log("Serving on port 3000");
 });
@@ -143,6 +167,7 @@ app.post(
         });
         await newUser.save();
         req.session.user_id = newUser._id;
+        req.session.user_cart = currUser.cart;
         var day = 864000000;
         req.session.cookie.expires = new Date(Date.now() + day);
         req.session.cookie.maxAge = day;
@@ -179,38 +204,43 @@ app.get("/sports", requireLogin, (req, res) => {
 //cart route
 app.get("/cart", requireLogin, (req, res) => {
   const userCart = req.session.user_cart;
-  console.log(userCart);
   res.render("cart", { userCart });
 });
 
 //boxing sport route
 app.get("/boxing", requireLogin, (req, res) => {
-  res.render("boxing");
+  const userCart = req.session.user_cart;
+  res.render("boxing", { userCart, x: clicker });
 });
 
 //tennis sport route
 app.get("/tennis", requireLogin, (req, res) => {
-  res.render("tennis");
+  const userCart = req.session.user_cart;
+  res.render("tennis", { userCart, x: clicker });
 });
 
 //leaves book route
 app.get("/leaves", requireLogin, (req, res) => {
-  res.render("leaves");
+  const userCart = req.session.user_cart;
+  res.render("leaves", { userCart, x: clicker });
 });
 
 //sun book route
 app.get("/sun", requireLogin, (req, res) => {
-  res.render("sun");
+  const userCart = req.session.user_cart;
+  res.render("sun", { userCart, x: clicker });
 });
 
 //galaxy phone route
 app.get("/galaxy", requireLogin, (req, res) => {
-  res.render("galaxy");
+  var userCart = req.session.user_cart;
+  res.render("galaxy", { userCart, x: clicker });
 });
 
 //iphone phone route
 app.get("/iphone", requireLogin, (req, res) => {
-  res.render("iphone");
+  const userCart = req.session.user_cart;
+  res.render("iphone", { userCart, x: clicker });
 });
 // dsbajdkgasdjkhasvd kasgd yi
 //search
