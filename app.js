@@ -96,6 +96,7 @@ const clicker = catchAsync(async function (name, userID) {
     });
     currUser.save();
   }
+  alert("Hello world!");
 });
 
 app.listen(3000, () => {
