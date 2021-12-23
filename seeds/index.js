@@ -26,6 +26,7 @@ const seedDB = async () => {
       category: `${products[i].category}`,
       description: `${products[i].description}`,
       price: `${products[i].price}`,
+      ref: `${products[i].ref}`,
     });
 
     await p.save();

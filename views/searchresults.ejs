@@ -13,6 +13,10 @@
         text-align: center;
         -webkit-text-stroke: 1px blue;
       }
+      .card-horizontal {
+        display: flex;
+        flex: 1 1 auto;
+      }
     </style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -58,9 +62,20 @@
       </div>
     </nav>
     <% if (results.length==0) { %>
-    <li>"Nothing"</li>
+    <div>item not found</div>
     <% }%> <% for (let result of results) { %>
-    <li><%= result.name %></li>
+    <a class="card" href="<%=`${result.ref}`%>">
+      <div class="card-horizontal">
+        <div class="img-square-wrapper">
+          <img class="" src="<%= result.image %>" width="200" height="250" />
+        </div>
+        <div class="card-body">
+          <h4 class="card-title"><%= result.name %></h4>
+          <h6 class="card-subtitle mb-2 text-muted"><%= result.category %></h6>
+          <p class="card-text"><%= result.description %></p>
+        </div>
+      </div>
+    </a>
     <% } %>
   </body>
 </html>
