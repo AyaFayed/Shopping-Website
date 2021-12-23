@@ -61,9 +61,9 @@
     </nav>
     <div>
       <% if (userCart.length==0) { %>
-      <div style="color: aliceblue">Nothing</div>
+      <div style="color: aliceblue">Your Cart Is Empty</div>
       <% }%> <% for (let prod of userCart) { %>
-      <div class="card-light" style="color: aliceblue">
+      <div class="card-light m-2" style="color: aliceblue">
         <div class="card-horizontal">
           <div class="img-square-wrapper">
             <img class="" src="<%=prod.image %>" width="160" height="200" />
