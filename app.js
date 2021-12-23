@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
 const flash = require("connect-flash");
 const product = require("./models/product");
 const user = require("./models/user");
@@ -14,12 +15,14 @@ const session = require("express-session");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
 app.use(flash());
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.raw());
 app.use(bodyParser.text());
+app.use(methodOverride("_method"));
 
 //========================
 // SESSION & MONGO CONFIG
@@ -84,11 +87,18 @@ app.post(
   catchAsync(async (req, res) => {
     const { username, password } = req.body;
     const currUser = await user.findOne({ username });
-    const valid = await bcrypt.compare(password, currUser.password);
-    if (valid) {
-      req.session.user_id = currUser._id;
-      res.redirect("/home");
+    if (currUser) {
+      const valid = await bcrypt.compare(password, currUser.password);
+      if (valid) {
+        req.session.user_id = currUser._id;
+        req.flash("success", "sucessfully logged in!");
+        res.redirect("/home");
+      } else {
+        req.flash("error", "wrong username or password!");
+        res.redirect("/");
+      }
     } else {
+      req.flash("error", "wrong username or password!");
       res.redirect("/");
     }
   })
@@ -111,12 +121,14 @@ app.post(
     const { error } = userSchema.validate(req.body);
     if (error) {
       const msg = error.details.map((el) => el.message).join(",");
+      req.flash("error", msg);
       res.redirect("/registration");
     } else {
       const { username, password } = req.body;
       const otherUser = await user.findOne({ username });
       if (otherUser) {
         const msg = "This username already exists!";
+        req.flash("error", msg);
         res.redirect("/registration");
       } else {
         const pass = await bcrypt.hash(password, 12);
@@ -126,6 +138,7 @@ app.post(
         });
         await newUser.save();
         req.session.user_id = newUser._id;
+        req.flash("success", "Registeration completed successfully!");
         res.redirect("/home");
       }
     }
@@ -154,7 +167,9 @@ app.get("/sports", requireLogin, (req, res) => {
 
 //cart route
 app.get("/cart", requireLogin, (req, res) => {
-  res.render("cart");
+  const currUser = product.findOne({ _id: req.session.user_id });
+  const userCart = currUser.cart;
+  res.render("cart", { userCart });
 });
 
 //boxing sport route
