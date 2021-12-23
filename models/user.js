@@ -25,6 +25,7 @@ const cartSchema = new mongoose.Schema({
   qty: {
     type: Number,
   },
+  ref: String,
 });
 const userSchema = new mongoose.Schema({
   username: {

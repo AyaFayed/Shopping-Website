@@ -93,6 +93,7 @@ const clicker = catchAsync(async function (name, userID) {
       description: prod.description,
       price: prod.price,
       qty: 1,
+      ref: prod.ref,
     });
     currUser.save();
   }
