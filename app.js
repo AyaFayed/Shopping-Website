@@ -72,17 +72,21 @@ const requireLogin = (req, res, next) => {
 //===============
 // Add to Cart
 //===============
-async function clicker(name, cart) {
+const clicker = catchAsync(async function (name, userID) {
+  const currUser = await user.findOne({ _id: userID });
   const prod = await product.findOne({ name });
-  const exists = false;
+  const cart = currUser.cart;
+  var exists = false;
   for (let one of cart) {
     if (one.name == name) {
       exists = true;
-      one.qty = one.qty + 1;
+      const qty = one.qty;
+      one.qty = qty + 1;
+      currUser.save();
     }
   }
   if (!exists) {
-    cart.push({
+    currUser.cart.push({
       image: prod.image,
       name: prod.name,
       category: prod.category,
@@ -90,8 +94,9 @@ async function clicker(name, cart) {
       price: prod.price,
       qty: 1,
     });
+    currUser.save();
   }
-}
+});
 
 app.listen(3000, () => {
   console.log("Serving on port 3000");
@@ -115,7 +120,6 @@ app.post(
       const valid = await bcrypt.compare(password, currUser.password);
       if (valid) {
         req.session.user_id = currUser._id;
-        req.session.user_cart = currUser.cart;
         var day = 86400000;
         req.session.cookie.expires = new Date(Date.now() + day);
         req.session.cookie.maxAge = day;
@@ -167,7 +171,6 @@ app.post(
         });
         await newUser.save();
         req.session.user_id = newUser._id;
-        req.session.user_cart = currUser.cart;
         var day = 864000000;
         req.session.cookie.expires = new Date(Date.now() + day);
         req.session.cookie.maxAge = day;
@@ -202,45 +205,63 @@ app.get("/sports", requireLogin, (req, res) => {
 });
 
 //cart route
-app.get("/cart", requireLogin, (req, res) => {
-  const userCart = req.session.user_cart;
-  res.render("cart", { userCart });
-});
+app.get(
+  "/cart",
+  requireLogin,
+  catchAsync(async (req, res) => {
+    const currUser = await user.findOne({ _id: req.session.user_id });
+    const userCart = currUser.cart;
+    res.render("cart", { userCart });
+  })
+);
+
+// Delete Cart
+
+app.post(
+  "/cart",
+  requireLogin,
+  catchAsync(async (req, res) => {
+    const currUser = await user.findOne({ _id: req.session.user_id });
+    currUser.cart = [];
+    currUser.save();
+    res.redirect("/cart");
+  })
+);
 
 //boxing sport route
 app.get("/boxing", requireLogin, (req, res) => {
-  const userCart = req.session.user_cart;
-  res.render("boxing", { userCart, x: clicker });
+  const currUser = req.session.user_id;
+  res.render("boxing", { currUser, x: clicker });
 });
 
 //tennis sport route
 app.get("/tennis", requireLogin, (req, res) => {
-  const userCart = req.session.user_cart;
-  res.render("tennis", { userCart, x: clicker });
+  const currUser = req.session.user_id;
+  res.render("tennis", { currUser, x: clicker });
 });
 
 //leaves book route
 app.get("/leaves", requireLogin, (req, res) => {
-  const userCart = req.session.user_cart;
-  res.render("leaves", { userCart, x: clicker });
+  const currUser = req.session.user_id;
+  res.render("leaves", { currUser, x: clicker });
 });
 
 //sun book route
 app.get("/sun", requireLogin, (req, res) => {
-  const userCart = req.session.user_cart;
-  res.render("sun", { userCart, x: clicker });
+  const currUser = req.session.user_id;
+  res.render("sun", { currUser, x: clicker });
 });
 
 //galaxy phone route
 app.get("/galaxy", requireLogin, (req, res) => {
-  var userCart = req.session.user_cart;
-  res.render("galaxy", { userCart, x: clicker });
+  const currUser = req.session.user_id;
+  res.render("galaxy", { currUser, x: clicker });
 });
 
 //iphone phone route
 app.get("/iphone", requireLogin, (req, res) => {
-  const userCart = req.session.user_cart;
-  res.render("iphone", { userCart, x: clicker });
+  const currUser = req.session.user_id;
+  res.render("iphone", { currUser, x: clicker });
 });
 // dsbajdkgasdjkhasvd kasgd yi
 //search
