@@ -24,8 +24,6 @@ const productSchema = new mongoose.Schema({
   ref: String,
 });
 
-productSchema.index({ title: "text", description: "text", category: "text" });
 const product = mongoose.model("product", productSchema);
-product.createIndexes();
 
 module.exports = product;

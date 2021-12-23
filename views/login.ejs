@@ -18,6 +18,11 @@
         top: 50px;
         color: white;
       }
+      .cont2 {
+        position: relative;
+        left: 420px;
+        top: 30px;
+      }
     </style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,6 +39,11 @@
   <body>
     <div class="container">
       <h1>Welcome</h1>
+      <% if (error.length!=0) {%>
+      <div class="alert alert-danger cont2 col-3" role="alert">
+        <%= error %>
+      </div>
+      <%}%>
     </div>
     <div class="cont">
       <form method="POST" class="needs-validation" novalidate>

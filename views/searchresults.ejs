@@ -57,7 +57,9 @@
         </form>
       </div>
     </nav>
-    <% for (let result of results) { %>
+    <% if (results.length==0) { %>
+    <li>"Nothing"</li>
+    <% }%> <% for (let result of results) { %>
     <li><%= result.name %></li>
     <% } %>
   </body>
