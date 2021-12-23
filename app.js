@@ -143,7 +143,7 @@ app.post(
         });
         await newUser.save();
         req.session.user_id = newUser._id;
-        var day = 86400000;
+        var day = 864000000;
         req.session.cookie.expires = new Date(Date.now() + day);
         req.session.cookie.maxAge = day;
 
@@ -179,6 +179,7 @@ app.get("/sports", requireLogin, (req, res) => {
 //cart route
 app.get("/cart", requireLogin, (req, res) => {
   const userCart = req.session.user_cart;
+  console.log(userCart);
   res.render("cart", { userCart });
 });
 
