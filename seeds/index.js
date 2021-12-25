@@ -1,6 +1,4 @@
-const mongoose = require("mongoose");
-const products = require("./products");
-const product = require("../models/product");
+const mongoose = require("mongoose");;
 const users = require("./users");
 const user = require("../models/user");
 const bcrypt = require("bcrypt");
@@ -18,19 +16,7 @@ db.once("open", () => {
 });
 
 const seedDB = async () => {
-  await product.deleteMany({});
-  for (let i = 0; i < products.length; i++) {
-    const p = new product({
-      name: `${products[i].name}`,
-      image: `${products[i].image}`,
-      category: `${products[i].category}`,
-      description: `${products[i].description}`,
-      price: `${products[i].price}`,
-      ref: `${products[i].ref}`,
-    });
-
-    await p.save();
-  }
+ 
   await user.deleteMany({});
   for (let i = 0; i < users.length; i++) {
     const pass = await bcrypt.hash(users[i].password, 12);

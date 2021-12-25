@@ -5,13 +5,14 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
-const product = require("./models/product");
 const user = require("./models/user");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
+const products = require("./products.json");
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -74,7 +75,12 @@ const requireLogin = (req, res, next) => {
 //===============
 const clicker = catchAsync(async function (name, userID) {
   const currUser = await user.findOne({ _id: userID });
-  const prod = await product.findOne({ name });
+  var prod = [];
+  for(let i=0; i<products.length ; i++){
+    if(products[i]["name"].toLowerCase() === name.toLowerCase()){
+        prod= products[i];
+    }
+}
   const cart = currUser.cart;
   var exists = false;
   for (let one of cart) {
@@ -82,7 +88,7 @@ const clicker = catchAsync(async function (name, userID) {
       exists = true;
       const qty = one.qty;
       one.qty = qty + 1;
-      currUser.save();
+     await currUser.save();
     }
   }
   if (!exists) {
@@ -95,7 +101,7 @@ const clicker = catchAsync(async function (name, userID) {
       qty: 1,
       ref: prod.ref,
     });
-    currUser.save();
+   await currUser.save();
   }
   alert("Hello world!");
 });
@@ -225,7 +231,7 @@ app.post(
   catchAsync(async (req, res) => {
     const currUser = await user.findOne({ _id: req.session.user_id });
     currUser.cart = [];
-    currUser.save();
+    await currUser.save();
     res.redirect("/cart");
   })
 );
@@ -269,17 +275,16 @@ app.get("/iphone", requireLogin, (req, res) => {
 //search
 app.post(
   "/search",
-  catchAsync(async (req, res) => {
+   (req, res) => {
     const { Search } = req.body;
-    const all = await product.find({});
     var results = [];
     if (Search.length != 0) {
-      for (let one of all) {
-        if (one.name.toLowerCase().includes(Search.toLowerCase())) {
-          results.push(one);
+      for(let i=0; i<products.length ; i++){
+        if(products[i]["name"].toLowerCase().includes(Search.toLowerCase())){
+              results.push(products[i]);
         }
-      }
+    }
     }
     res.render("searchresults", { results, name : 'Search Results' });
-  })
+  }
 );
