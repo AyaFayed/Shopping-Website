@@ -110,7 +110,7 @@ app.listen(3000, () => {
 // another public routes
 //login
 app.get("/", (req, res) => {
-  res.render("login");
+  res.render("login",{name : 'Welcome'});
 });
 
 app.post(
@@ -141,7 +141,7 @@ app.post(
 
 //registration
 app.get("/registration", (req, res) => {
-  res.render("registration");
+  res.render("registration",{name :' Registration' });
 });
 
 //registration of a new user
@@ -188,22 +188,22 @@ app.post(
 
 //home route
 app.get("/home", requireLogin, (req, res) => {
-  res.render("home");
+  res.render("home",{name: 'Products'});
 });
 
 //books route
 app.get("/books", requireLogin, (req, res) => {
-  res.render("books");
+  res.render("books", {name : 'Books'});
 });
 
 //phones route
 app.get("/phones", requireLogin, (req, res) => {
-  res.render("phones");
+  res.render("phones", {name : 'Phones'});
 });
 
 //sports route
 app.get("/sports", requireLogin, (req, res) => {
-  res.render("sports");
+  res.render("sports", {name :'Sports'});
 });
 
 //cart route
@@ -213,7 +213,7 @@ app.get(
   catchAsync(async (req, res) => {
     const currUser = await user.findOne({ _id: req.session.user_id });
     const userCart = currUser.cart;
-    res.render("cart", { userCart });
+    res.render("cart", { userCart , name :'Cart' });
   })
 );
 
@@ -233,37 +233,37 @@ app.post(
 //boxing sport route
 app.get("/boxing", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("boxing", { currUser, x: clicker });
+  res.render("boxing", { currUser, x: clicker , name : 'Boxing Bag' });
 });
 
 //tennis sport route
 app.get("/tennis", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("tennis", { currUser, x: clicker });
+  res.render("tennis", { currUser, x: clicker ,name : 'Tennis Racket'  });
 });
 
 //leaves book route
 app.get("/leaves", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("leaves", { currUser, x: clicker });
+  res.render("leaves", { currUser, x: clicker  ,name : 'Leaves of Grass' });
 });
 
 //sun book route
 app.get("/sun", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("sun", { currUser, x: clicker });
+  res.render("sun", { currUser, x: clicker  ,name : 'The Sun and Her Flowers' });
 });
 
 //galaxy phone route
 app.get("/galaxy", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("galaxy", { currUser, x: clicker });
+  res.render("galaxy", { currUser, x: clicker  ,name : 'Galaxy S21 Ultra' });
 });
 
 //iphone phone route
 app.get("/iphone", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("iphone", { currUser, x: clicker });
+  res.render("iphone", { currUser, x: clicker  ,name : 'iPhone 13 Pro' });
 });
 // dsbajdkgasdjkhasvd kasgd yi
 //search
@@ -280,6 +280,6 @@ app.post(
         }
       }
     }
-    res.render("searchresults", { results });
+    res.render("searchresults", { results, name : 'Search Results' });
   })
 );
