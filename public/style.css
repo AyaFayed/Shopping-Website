@@ -114,6 +114,11 @@ h1 {
   left: 80px;
   top: 370px;
 }
+.cart3 {
+  position: fixed;
+  left: 80px;
+  top: 430px;
+}
 #my {
   zoom: 110%;
 }
