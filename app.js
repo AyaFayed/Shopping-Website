@@ -293,6 +293,12 @@ app.post(
   }
 );
 
+//logout
+app.post("/logout",(req,res)=>{
+    req.session.user_id=null;
+    res.redirect("/");
+});
+
 //any other route
 app.get("/*", (req, res) => {
   if (req.session.user_id) {
