@@ -28,7 +28,11 @@ const seedDB = async () => {
 
     await u.save();
   }
+  
 };
+
+
+
 
 seedDB().then(() => {
   mongoose.connection.close();

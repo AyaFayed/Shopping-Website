@@ -122,7 +122,6 @@ app.get("/", (req, res) => {
   res.render("login",{name : 'Welcome'});}
 });
 
-
 app.post(
   "/",
   catchAsync(async (req, res) => {
@@ -148,6 +147,8 @@ app.post(
     }
   })
 );
+
+
 
 //registration
 app.get("/registration", (req, res) => {
@@ -274,7 +275,6 @@ app.get("/iphone", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
   res.render("iphone", { currUser, x: clicker  ,name : 'iPhone 13 Pro' });
 });
-
 
 //search
 app.post(
