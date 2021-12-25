@@ -103,7 +103,6 @@ const clicker = catchAsync(async function (name, userID) {
     });
    await currUser.save();
   }
-  alert("Hello world!");
 });
 
 app.listen(3000, () => {
@@ -113,11 +112,16 @@ app.listen(3000, () => {
 //===============
 // PUBLIC ROUTES
 //===============
-// another public routes
+
 //login
 app.get("/", (req, res) => {
-  res.render("login",{name : 'Welcome'});
+  if (req.session.user_id) {
+    res.render("home",{name: 'Products'});
+  }
+  else{
+  res.render("login",{name : 'Welcome'});}
 });
+
 
 app.post(
   "/",
@@ -179,7 +183,7 @@ app.post(
         });
         await newUser.save();
         req.session.user_id = newUser._id;
-        var day = 864000000;
+        var day = 86400000;
         req.session.cookie.expires = new Date(Date.now() + day);
         req.session.cookie.maxAge = day;
 
@@ -190,7 +194,6 @@ app.post(
   })
 );
 
-// hoba eh hoba ah
 
 //home route
 app.get("/home", requireLogin, (req, res) => {
@@ -271,7 +274,8 @@ app.get("/iphone", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
   res.render("iphone", { currUser, x: clicker  ,name : 'iPhone 13 Pro' });
 });
-// dsbajdkgasdjkhasvd kasgd yi
+
+
 //search
 app.post(
   "/search",
@@ -288,3 +292,12 @@ app.post(
     res.render("searchresults", { results, name : 'Search Results' });
   }
 );
+
+//any other route
+app.get("/*", (req, res) => {
+  if (req.session.user_id) {
+    res.render("home",{name: 'Products'});
+  }
+  else{
+  res.render("login",{name : 'Welcome'});}
+});
