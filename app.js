@@ -105,9 +105,11 @@ const clicker = catchAsync(async function (name, userID) {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Serving on port 3000");
-});
+if (process.env.PORT){
+  app.listen(process.env.PORT);
+}else {
+app.listen(3000);
+}
 
 //===============
 // PUBLIC ROUTES
