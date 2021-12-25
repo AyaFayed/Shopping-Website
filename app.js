@@ -132,9 +132,9 @@ app.post(
       const valid = await bcrypt.compare(password, currUser.password);
       if (valid) {
         req.session.user_id = currUser._id;
-        var day = 86400000;
-        req.session.cookie.expires = new Date(Date.now() + day);
-        req.session.cookie.maxAge = day;
+        var hour = 3600000;
+        req.session.cookie.expires = new Date(Date.now() + hour);
+        req.session.cookie.maxAge = hour;
 
         req.flash("success", "sucessfully logged in!");
         res.redirect("/home");
@@ -183,9 +183,9 @@ app.post(
         });
         await newUser.save();
         req.session.user_id = newUser._id;
-        var day = 86400000;
-        req.session.cookie.expires = new Date(Date.now() + day);
-        req.session.cookie.maxAge = day;
+        var hour = 3600000;
+        req.session.cookie.expires = new Date(Date.now() + hour);
+        req.session.cookie.maxAge = hour;
 
         req.flash("success", "Registeration completed successfully!");
         res.redirect("/home");
