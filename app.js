@@ -38,7 +38,7 @@ app.use(
 );
 
 mongoose
-  .connect("mongodb://localhost:27017/shoppingWebsiteDB", {
+  .connect("mongodb+srv://ayaFayed:<aya2580>@cluster0.5nxuj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
