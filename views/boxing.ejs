@@ -9,12 +9,7 @@
       84.00 Inches.
     </div>
     <div class="cart">
-      <button id="cart"  onclick="<%= check = x('Boxing Bag', currUser)%>" class="btn btn-secondary ml-3">Add to Cart</button>
-    </div>
-    <div>
-      
-    <% if (check==0) { %>
-      <div class="m-4" style="color: aliceblue"><h3 class="mx-auto" style="width: 300px;">Item Not Found</h3></div> <%}%>
+      <button id="cart"  onclick="<%=x('Boxing Bag', currUser)%>" class="btn btn-secondary ml-3">Add to Cart</button>
     </div>
     <div class="video">
       <video width="480" height="360" controls>

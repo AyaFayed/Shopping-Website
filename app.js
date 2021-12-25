@@ -86,6 +86,9 @@ const clicker = catchAsync(async function (name, userID) {
   for (let one of cart) {
     if (one.name == name) {
       exists = true;
+      const qty = one.qty;
+      one.qty = qty + 1;
+     await currUser.save();
     }
   }
   if (!exists) {
@@ -99,10 +102,6 @@ const clicker = catchAsync(async function (name, userID) {
       ref: prod.ref,
     });
    await currUser.save();
-      return 1;
-  }
-  else{
-    return 0;
   }
 });
 
@@ -244,8 +243,7 @@ app.post(
 //boxing sport route
 app.get("/boxing", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  var check=2;
-  res.render("boxing", {check, currUser, x: clicker , name : 'Boxing Bag' });
+  res.render("boxing", { currUser, x: clicker , name : 'Boxing Bag' });
 });
 
 //tennis sport route
