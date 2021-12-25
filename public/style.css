@@ -119,6 +119,12 @@ h1 {
   left: 80px;
   top: 430px;
 }
+.b3:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: rgb(160, 57, 57);
+  outline: rgb(160, 57, 57);
+  outline-style: double;
+}
 #my {
   zoom: 110%;
 }
