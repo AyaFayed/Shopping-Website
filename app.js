@@ -139,11 +139,11 @@ app.post(
         req.flash("success", "sucessfully logged in!");
         res.redirect("/home");
       } else {
-        req.flash("error", "wrong username or password!");
+        req.flash("error", "wrong password!");
         res.redirect("/");
       }
     } else {
-      req.flash("error", "wrong username or password!");
+      req.flash("error", "You need to register!");
       res.redirect("/");
     }
   })
