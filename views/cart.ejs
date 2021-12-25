@@ -1,72 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <style>
-      body {
-        background-image: url("background3.jpg");
-        background-repeat: no-repeat;
-        background-size: 100%;
-      }
-
-      h1 {
-        color: white;
-        text-align: center;
-        -webkit-text-stroke: 1px blue;
-      }
-      .card-horizontal {
-        display: flex;
-        flex: 1 1 auto;
-      }
-    </style>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Cart</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-      crossorigin="anonymous"
-    />
-  </head>
+<%- include ("partials/header") %>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-2">
-      <a class="navbar-brand" style="color: rgb(191, 255, 161)">Cart</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto"></ul>
-        <form method="POST" action="/search" class="form-inline my-2 my-lg-0">
-          <input
-            class="form-control mr-sm-2"
-            name="Search"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-            Search
-          </button>
-        </form>
-      </div>
-    </nav>
+    <%- include ("partials/navbar") %>
     <div>
       <% if (userCart.length==0) { %>
-      <div style="color: aliceblue">Your Cart Is Empty</div>
+      <div class="m-4" style="color: aliceblue"><h3 class="mx-auto" style="width: 300px;">Your Cart Is Empty</h3></div>
       <% }%> <% for (let prod of userCart) { %>
-      <div class="card-light m-2" style="color: aliceblue">
+      <div class="card-light m-1" style="color: aliceblue">
         <div class="card-horizontal">
           <div class="img-square-wrapper">
-            <img class="" src="<%=prod.image %>" width="160" height="200" />
+            <img class="" src="<%=prod.image %>" width="140" height="190" />
           </div>
           <div class="card-body">
             <h4 class="card-title"><%= prod.name %></h4>
@@ -74,7 +16,7 @@
             <h6 class="card-subtitle mt-2">Quantity : <%= prod.qty %></h6>
             <h6 class="card-subtitle mb-1 mt-2">Price : <%= prod.price %> $</h6>
 
-            <a class="btn btn-info mt-2" href="<%= `${prod.ref}` %>">
+            <a class="btn btn-outline-light mt-2" href="<%= `${prod.ref}` %>">
               view item</a
             >
           </div>
@@ -82,12 +24,14 @@
       </div>
       <% } %>
     </div>
-    <div class="mt-4">
+    <% if (userCart.length!=0) { %>
+    <div class="my-4">
       <form method="POST" action="/cart">
-        <button type="submit" class="btn btn-outline-light my-2 my-sm-0 mt-4">
+        <button type="submit" class="btn btn-outline-danger btn-lg mx-2  my-sm-0 my-4">
           Delete Cart
         </button>
       </form>
     </div>
+    <% } %>
   </body>
 </html>

@@ -1,0 +1,181 @@
+body {
+  background-image: url("background3.jpg");
+  background-repeat: repeat-y;
+  background-size: 100%;
+}
+.regBody {
+  background-image: url("background2.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.loginBody {
+  background-image: url("background1.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.loginH1 {
+  color: white;
+  text-align: center;
+  -webkit-text-stroke: 1px black;
+}
+h1 {
+  color: white;
+  text-align: center;
+  margin-top: 3%;
+  -webkit-text-stroke: 1px blue;
+}
+.container1 {
+  position: fixed;
+  left: 50px;
+  top: 150px;
+  color: white;
+}
+.container2 {
+  position: fixed;
+  left: 300px;
+  top: 150px;
+  color: white;
+  width: 300px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+.container3 {
+  position: fixed;
+  left: 300px;
+  top: 150px;
+  align-items: center;
+  color: white;
+}
+
+.container4 {
+  position: fixed;
+  left: 350px;
+  top: 150px;
+  color: white;
+}
+.container5 {
+  position: fixed;
+  left: 200px;
+  top: 150px;
+  color: white;
+}
+.cont {
+  position: relative;
+  left: 600px;
+  top: 50px;
+  color: white;
+  -webkit-text-stroke: 0.5px black;
+}
+
+.cont2 {
+  position: relative;
+  left: 420px;
+  top: 30px;
+}
+.cont3 {
+  position: relative;
+  left: 600px;
+  top: 50px;
+  color: white;
+  -webkit-text-stroke: 0.5px black;
+}
+.cont4 {
+  margin-top: 6%;
+  color: white;
+  -webkit-text-stroke: 0.5px black;
+  margin-left: 40%;
+  margin-right: 50%;
+  width: 100em;
+}
+
+.video {
+  position: fixed;
+  left: 700px;
+  top: 150px;
+  color: white;
+  width: 300px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+.cart {
+  position: fixed;
+  left: 30px;
+  top: 470px;
+}
+#cart:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+
+.cart2 {
+  position: fixed;
+  left: 80px;
+  top: 370px;
+}
+#my {
+  zoom: 110%;
+}
+
+#label1 {
+  position: relative;
+  right: -50px;
+}
+#label2 {
+  position: relative;
+  right: 0px;
+}
+#label3 {
+  position: relative;
+  right: -15px;
+}
+
+#label4 {
+  position: relative;
+  right: 18px;
+}
+.item {
+  position: relative;
+  left: 50px;
+}
+.item:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+
+.card-horizontal {
+  display: flex;
+  flex: 1 1 auto;
+  color: aliceblue;
+}
+
+.res:hover {
+  color: rgb(137, 186, 114);
+}
+
+#phones:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+#sports:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+#books:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+#c1 {
+  margin-left: 35%;
+  margin-right: 50%;
+  margin-top: 2%;
+}

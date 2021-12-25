@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const product = require("./product");
 const cartSchema = new mongoose.Schema({
   image: {
     type: String,

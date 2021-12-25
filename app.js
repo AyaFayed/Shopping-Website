@@ -5,13 +5,14 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
-const product = require("./models/product");
 const user = require("./models/user");
 const catchAsync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
+const products = require("./products.json");
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -74,7 +75,12 @@ const requireLogin = (req, res, next) => {
 //===============
 const clicker = catchAsync(async function (name, userID) {
   const currUser = await user.findOne({ _id: userID });
-  const prod = await product.findOne({ name });
+  var prod = [];
+  for(let i=0; i<products.length ; i++){
+    if(products[i]["name"].toLowerCase() === name.toLowerCase()){
+        prod= products[i];
+    }
+}
   const cart = currUser.cart;
   var exists = false;
   for (let one of cart) {
@@ -82,7 +88,7 @@ const clicker = catchAsync(async function (name, userID) {
       exists = true;
       const qty = one.qty;
       one.qty = qty + 1;
-      currUser.save();
+     await currUser.save();
     }
   }
   if (!exists) {
@@ -95,9 +101,8 @@ const clicker = catchAsync(async function (name, userID) {
       qty: 1,
       ref: prod.ref,
     });
-    currUser.save();
+   await currUser.save();
   }
-  alert("Hello world!");
 });
 
 app.listen(3000, () => {
@@ -107,13 +112,16 @@ app.listen(3000, () => {
 //===============
 // PUBLIC ROUTES
 //===============
-// another public routes
+
 //login
 app.get("/", (req, res) => {
-  res.render("login");
+  if (req.session.user_id) {
+    res.render("home",{name: 'Products'});
+  }
+  else{
+  res.render("login",{name : 'Welcome'});}
 });
 
-var currUser = {};
 app.post(
   "/",
   catchAsync(async (req, res) => {
@@ -144,7 +152,7 @@ app.post(
 
 //registration
 app.get("/registration", (req, res) => {
-  res.render("registration");
+  res.render("registration",{name :' Registration' });
 });
 
 //registration of a new user
@@ -176,7 +184,7 @@ app.post(
         });
         await newUser.save();
         req.session.user_id = newUser._id;
-        var day = 864000000;
+        var day = 86400000;
         req.session.cookie.expires = new Date(Date.now() + day);
         req.session.cookie.maxAge = day;
 
@@ -187,26 +195,25 @@ app.post(
   })
 );
 
-// hoba eh hoba ah
 
 //home route
 app.get("/home", requireLogin, (req, res) => {
-  res.render("home");
+  res.render("home",{name: 'Products'});
 });
 
 //books route
 app.get("/books", requireLogin, (req, res) => {
-  res.render("books");
+  res.render("books", {name : 'Books'});
 });
 
 //phones route
 app.get("/phones", requireLogin, (req, res) => {
-  res.render("phones");
+  res.render("phones", {name : 'Phones'});
 });
 
 //sports route
 app.get("/sports", requireLogin, (req, res) => {
-  res.render("sports");
+  res.render("sports", {name :'Sports'});
 });
 
 //cart route
@@ -216,7 +223,7 @@ app.get(
   catchAsync(async (req, res) => {
     const currUser = await user.findOne({ _id: req.session.user_id });
     const userCart = currUser.cart;
-    res.render("cart", { userCart });
+    res.render("cart", { userCart , name :'Cart' });
   })
 );
 
@@ -228,7 +235,7 @@ app.post(
   catchAsync(async (req, res) => {
     const currUser = await user.findOne({ _id: req.session.user_id });
     currUser.cart = [];
-    currUser.save();
+    await currUser.save();
     res.redirect("/cart");
   })
 );
@@ -236,60 +243,61 @@ app.post(
 //boxing sport route
 app.get("/boxing", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("boxing", { currUser, x: clicker });
+  res.render("boxing", { currUser, x: clicker , name : 'Boxing Bag' });
 });
 
 //tennis sport route
 app.get("/tennis", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("tennis", { currUser, x: clicker });
+  res.render("tennis", { currUser, x: clicker ,name : 'Tennis Racket'  });
 });
 
 //leaves book route
 app.get("/leaves", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("leaves", { currUser, x: clicker });
+  res.render("leaves", { currUser, x: clicker  ,name : 'Leaves of Grass' });
 });
 
 //sun book route
 app.get("/sun", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("sun", { currUser, x: clicker });
+  res.render("sun", { currUser, x: clicker  ,name : 'The Sun and Her Flowers' });
 });
 
 //galaxy phone route
 app.get("/galaxy", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("galaxy", { currUser, x: clicker });
+  res.render("galaxy", { currUser, x: clicker  ,name : 'Galaxy S21 Ultra' });
 });
 
 //iphone phone route
 app.get("/iphone", requireLogin, (req, res) => {
   const currUser = req.session.user_id;
-  res.render("iphone", { currUser, x: clicker });
+  res.render("iphone", { currUser, x: clicker  ,name : 'iPhone 13 Pro' });
 });
 
 //search
 app.post(
   "/search",
-  catchAsync(async (req, res) => {
+   (req, res) => {
     const { Search } = req.body;
-    const all = await product.find({});
     var results = [];
     if (Search.length != 0) {
-      for (let one of all) {
-        if (one.name.toLowerCase().includes(Search.toLowerCase())) {
-          results.push(one);
+      for(let i=0; i<products.length ; i++){
+        if(products[i]["name"].toLowerCase().includes(Search.toLowerCase())){
+              results.push(products[i]);
         }
-      }
     }
-    res.render("searchresults", { results });
-  })
-);
-
-
-// add to cart
-app.post("/galaxy",function(req,res){
-  console.log("no!");
+    }
+    res.render("searchresults", { results, name : 'Search Results' });
   }
 );
+
+//any other route
+app.get("/*", (req, res) => {
+  if (req.session.user_id) {
+    res.render("home",{name: 'Products'});
+  }
+  else{
+  res.render("login",{name : 'Welcome'});}
+});
