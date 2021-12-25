@@ -21,6 +21,7 @@ body {
 h1 {
   color: white;
   text-align: center;
+  margin-top: 3%;
   -webkit-text-stroke: 1px blue;
 }
 .container1 {
@@ -42,6 +43,7 @@ h1 {
   position: fixed;
   left: 300px;
   top: 150px;
+  align-items: center;
   color: white;
 }
 
@@ -77,6 +79,14 @@ h1 {
   color: white;
   -webkit-text-stroke: 0.5px black;
 }
+.cont4 {
+  margin-top: 6%;
+  color: white;
+  -webkit-text-stroke: 0.5px black;
+  margin-left: 40%;
+  margin-right: 50%;
+  width: 100em;
+}
 
 .video {
   position: fixed;
@@ -92,6 +102,13 @@ h1 {
   left: 30px;
   top: 470px;
 }
+#cart:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+
 .cart2 {
   position: fixed;
   left: 80px;
@@ -122,9 +139,43 @@ h1 {
   position: relative;
   left: 50px;
 }
+.item:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
 
 .card-horizontal {
   display: flex;
   flex: 1 1 auto;
   color: aliceblue;
+}
+
+.res:hover {
+  color: rgb(137, 186, 114);
+}
+
+#phones:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+#sports:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+#books:hover {
+  background-color: rgba(137, 186, 114, 0);
+  color: white;
+  outline: white;
+  outline-style: double;
+}
+#c1 {
+  margin-left: 35%;
+  margin-right: 50%;
+  margin-top: 2%;
 }

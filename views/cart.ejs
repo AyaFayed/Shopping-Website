@@ -3,12 +3,12 @@
     <%- include ("partials/navbar") %>
     <div>
       <% if (userCart.length==0) { %>
-      <div style="color: aliceblue">Your Cart Is Empty</div>
+      <div class="m-4" style="color: aliceblue"><h3 class="mx-auto" style="width: 300px;">Your Cart Is Empty</h3></div>
       <% }%> <% for (let prod of userCart) { %>
-      <div class="card-light m-2" style="color: aliceblue">
+      <div class="card-light m-1" style="color: aliceblue">
         <div class="card-horizontal">
           <div class="img-square-wrapper">
-            <img class="" src="<%=prod.image %>" width="160" height="200" />
+            <img class="" src="<%=prod.image %>" width="140" height="190" />
           </div>
           <div class="card-body">
             <h4 class="card-title"><%= prod.name %></h4>
@@ -16,7 +16,7 @@
             <h6 class="card-subtitle mt-2">Quantity : <%= prod.qty %></h6>
             <h6 class="card-subtitle mb-1 mt-2">Price : <%= prod.price %> $</h6>
 
-            <a class="btn btn-info mt-2" href="<%= `${prod.ref}` %>">
+            <a class="btn btn-outline-light mt-2" href="<%= `${prod.ref}` %>">
               view item</a
             >
           </div>
@@ -24,12 +24,14 @@
       </div>
       <% } %>
     </div>
-    <div class="mt-4">
+    <% if (userCart.length!=0) { %>
+    <div class="my-4">
       <form method="POST" action="/cart">
-        <button type="submit" class="btn btn-outline-light my-2 my-sm-0 mt-4">
+        <button type="submit" class="btn btn-outline-danger btn-lg mx-2  my-sm-0 my-4">
           Delete Cart
         </button>
       </form>
     </div>
+    <% } %>
   </body>
 </html>
