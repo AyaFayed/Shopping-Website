@@ -279,7 +279,7 @@ app.get("/sun", requireLogin, catchAsync(async (req, res) => {
   const userCart = currU.cart;
   const currUser = req.session.user_id;
   res.render("sun", { userCart , y: inCart ,currUser, x: clicker  ,name : 'The Sun and Her Flowers' });
-});
+}));
 
 //galaxy phone route
 app.get("/galaxy", requireLogin,catchAsync(async (req, res) => {
