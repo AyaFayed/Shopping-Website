@@ -86,9 +86,6 @@ const clicker = catchAsync(async function (name, userID) {
   for (let one of cart) {
     if (one.name == name) {
       exists = true;
-      const qty = one.qty;
-      one.qty = qty + 1;
-     await currUser.save();
     }
   }
   if (!exists) {
@@ -104,6 +101,17 @@ const clicker = catchAsync(async function (name, userID) {
    await currUser.save();
   }
 });
+
+const inCart = function (name , cart){
+  var exists = false;
+  for (let one of cart) {
+    if (one.name === name) {
+      exists = true;
+    }
+  }
+  return exists;
+}
+
 
 if (process.env.PORT){
   app.listen(process.env.PORT);
@@ -242,41 +250,52 @@ app.post(
   })
 );
 
-//boxing sport route
-app.get("/boxing", requireLogin, (req, res) => {
+app.get("/boxing", requireLogin, catchAsync(async (req, res) => {
+  const currU = await user.findOne({ _id: req.session.user_id });
+  const userCart = currU.cart;
   const currUser = req.session.user_id;
-  res.render("boxing", { currUser, x: clicker , name : 'Boxing Bag' });
-});
+  res.render("boxing", { userCart , y: inCart ,currUser, x: clicker , name : 'Boxing Bag' });
+}));
 
 //tennis sport route
-app.get("/tennis", requireLogin, (req, res) => {
+app.get("/tennis", requireLogin, catchAsync(async (req, res) => {
+  const currU = await user.findOne({ _id: req.session.user_id });
+  const userCart = currU.cart;
   const currUser = req.session.user_id;
-  res.render("tennis", { currUser, x: clicker ,name : 'Tennis Racket'  });
-});
+  res.render("tennis", { userCart , y: inCart ,currUser, x: clicker ,name : 'Tennis Racket'  });
+}));
 
 //leaves book route
-app.get("/leaves", requireLogin, (req, res) => {
+app.get("/leaves", requireLogin, catchAsync(async (req, res) => {
+  const currU = await user.findOne({ _id: req.session.user_id });
+  const userCart = currU.cart;
   const currUser = req.session.user_id;
-  res.render("leaves", { currUser, x: clicker  ,name : 'Leaves of Grass' });
-});
+  res.render("leaves", { userCart , y: inCart ,currUser ,x: clicker  ,name : 'Leaves of Grass' });
+}));
 
 //sun book route
-app.get("/sun", requireLogin, (req, res) => {
+app.get("/sun", requireLogin, catchAsync(async (req, res) => {
+  const currU = await user.findOne({ _id: req.session.user_id });
+  const userCart = currU.cart;
   const currUser = req.session.user_id;
-  res.render("sun", { currUser, x: clicker  ,name : 'The Sun and Her Flowers' });
+  res.render("sun", { userCart , y: inCart ,currUser, x: clicker  ,name : 'The Sun and Her Flowers' });
 });
 
 //galaxy phone route
-app.get("/galaxy", requireLogin, (req, res) => {
+app.get("/galaxy", requireLogin,catchAsync(async (req, res) => {
+  const currU = await user.findOne({ _id: req.session.user_id });
+  const userCart = currU.cart;
   const currUser = req.session.user_id;
-  res.render("galaxy", { currUser, x: clicker  ,name : 'Galaxy S21 Ultra' });
-});
+  res.render("galaxy", {userCart , y: inCart , currUser, x: clicker  ,name : 'Galaxy S21 Ultra' });
+}));
 
 //iphone phone route
-app.get("/iphone", requireLogin, (req, res) => {
+app.get("/iphone", requireLogin, catchAsync(async (req, res) => {
+  const currU = await user.findOne({ _id: req.session.user_id });
+  const userCart = currU.cart;
   const currUser = req.session.user_id;
-  res.render("iphone", { currUser, x: clicker  ,name : 'iPhone 13 Pro' });
-});
+  res.render("iphone", { userCart , y: inCart ,currUser, x: clicker  ,name : 'iPhone 13 Pro' });
+}));
 
 //search
 app.post(

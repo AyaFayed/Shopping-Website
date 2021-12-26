@@ -10,12 +10,31 @@
       philosophy of life and humanity.
     </div>
     <div class="cart">
-      <button id="cart"  onclick="<%=x('Leaves of Grass', currUser)%>"  class="btn btn-secondary ml-3">
-        Add to Cart
-      </button>
+      <button id="cart"    class="  btn btn-secondary ml-3">Add to Cart</button>
+      <h6 id= "error" class="m-3">
+      </h6>
     </div>
     <div class="video">
       <iframe width="560" height="315" src="https://www.youtube.com/embed/huvuEe1fsOc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
+    <div  id="exists" style="visibility: hidden;">
+      <%= y(name, userCart) %>
+   </div>
+   <script>
+document.getElementById('cart').onclick = ()=>{
+var error = document.getElementById('error');
+const exists = document.getElementById('exists').textContent;
+ if(exists.includes("tru")){
+   error.textContent= "This item already exists in your cart!";
+   error.style.color = "red"
+ }
+ else{
+   <%= x(name, currUser) %>;
+   error.textContent= "This item was successfully added to your cart!";
+   error.style.color = "green"
+ }
+
+}
+</script>
   </body>
 </html>
