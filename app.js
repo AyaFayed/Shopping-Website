@@ -300,6 +300,7 @@ app.get("/iphone", requireLogin, catchAsync(async (req, res) => {
 //search
 app.post(
   "/search",
+  requireLogin, 
    (req, res) => {
     const { Search } = req.body;
     var results = [];
@@ -314,7 +315,7 @@ app.post(
 );
 
 //logout
-app.post("/logout",(req,res)=>{
+app.post("/logout",requireLogin, (req,res)=>{
     req.session.user_id=null;
     res.redirect("/");
 });
