@@ -303,13 +303,12 @@ app.post(
    (req, res) => {
     const { Search } = req.body;
     var results = [];
-    if (Search.length != 0) {
       for(let i=0; i<products.length ; i++){
         if(products[i]["name"].toLowerCase().includes(Search.toLowerCase())){
               results.push(products[i]);
         }
     }
-    }
+    
     res.render("searchresults", { results, name : 'Search Results' });
   }
 );
