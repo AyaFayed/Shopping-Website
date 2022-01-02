@@ -33,9 +33,9 @@ const exists = document.getElementById('exists').textContent;
     <%= x(name, currUser) %>;
     error.textContent= "This item was successfully added to your cart!";
     error.style.color = "green"
+    var elm = document.getElementById('exists');
+    elm.textContent = "true";
   }
-  var elm = document.getElementById('exists');
-  elm.innerHTML=   <%= y(name, userCart) %>;
 
 }
 </script>
