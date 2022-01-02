@@ -31,7 +31,9 @@ const exists = document.getElementById('exists').textContent;
  else{
    <%= x(name, currUser) %>;
    error.textContent= "This item was successfully added to your cart!";
-   error.style.color = "green"
+   error.style.color = "green";
+    var elm = document.getElementById('exists');
+    elm.textContent = "true";
  }
 
 }
